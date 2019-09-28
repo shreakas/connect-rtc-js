@@ -1172,4 +1172,24 @@ export default class RtcSession {
 
         return mediaConstraints;
     }
+
+    sendDTMF(tones, ontonechange, options = {}) {
+        let duration = options.duration || 500;
+        let gap = options.gap || 50;
+        const senders = this._pc.getSenders();
+        let audioSender = senders.find(sender => sender.track && sender.track.kind === 'audio');
+        if (!audioSender) {
+            throw new Error("Browser doesn't support audio track");
+        }
+        if (!audioSender.dtmf) {
+            throw new Error("Audio track doesn't support DTMF");
+        }
+        let dtmfSender = audioSender.dtmf;
+        dtmfSender.ontonechange = ontonechange || {};
+        if (dtmfSender.canInsertDTMF) {
+            dtmfSender.insertDTMF(tones, duration, gap);
+        } else {
+            throw new Error("DTMF sender can't send right now");
+        }
+    }
 }
