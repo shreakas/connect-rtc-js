@@ -18,7 +18,9 @@ $(document).ready(function () {
 
         session.remoteAudioElement = audioElement;
 
-        session.forceAudioCodec = 'OPUS';
+        var codec = $('#forced-audio-codec').find(":selected").text() || 'OPUS';
+        console.log("Codec", codec);
+        session.forceAudioCodec = codec;
 
         // Set video codec if it presents
         var forceVideoCodec = $('#forced-video-codec option:selected').val();
